@@ -52,7 +52,6 @@ public:
 			}
 			node = node->list[word[i] - 'a'];
 		}
-
 		return true;
 	}
 
