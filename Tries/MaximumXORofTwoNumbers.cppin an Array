@@ -1,0 +1,62 @@
+// ULR: https://www.codingninjas.com/codestudio/problems/maximum-xor_3119012?topList=striver-sde-sheet-problems&utm_source=striver&utm_medium=website
+#include <bits/stdc++.h> 
+
+class Node {
+public:
+    vector<Node *> list;
+    Node () {
+        list = vector<Node*>(2, NULL);
+    }
+};
+
+class Trie {
+    Node* root;
+public:
+    Trie() {
+        root = new Node();
+    }
+
+    void insert(int num) {
+        Node* node = root;
+        for (int i = 31; i >= 0; i--) {
+            int x = ((num & (1 << i)) == 0); // Will tell if the Bit is set or not
+            if (node->list[x] == NULL) {
+                node->list[x] = new Node();
+            }
+            node = node->list[x];
+        }
+    }
+
+    int getXor(int val) {
+        int res = 0;
+        Node* node = root;
+        for (int i = 31; i >= 0; i--) {
+            int x = ((val & (1 << i)) == 0); // Will tell if the Bit is set or not
+            
+            if (node->list[x ^ 1] != NULL) {
+                res |= (1 << i);    
+                node = node->list[x ^ 1];
+            }
+            else {
+                node = node->list[x];
+            }
+
+        }
+        return res;
+    }
+
+};
+
+int maximumXor(vector<int> A) {
+    Trie * t  = new Trie();
+    for (auto num : A) {
+        t->insert(num);
+    }
+
+    int res = 0;
+    for (auto num : A) {
+        res = max(res, t->getXor(num));
+    }
+
+    return res;
+}
